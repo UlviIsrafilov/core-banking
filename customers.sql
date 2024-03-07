@@ -15,10 +15,12 @@ values(p_first_name,p_last_name,p_birth_date,p_gender );
 commit;
 end;
 
-create or replace procedure cb_customers_insert 
+create or replace procedure cb_customers_update 
 (p_id number,p_first_name varchar2 default null,
-p_last_name varchar2 default null, p_birth_date date default null,
-p_gender char default null)
+p_last_name varchar2 default null,
+p_birth_date date default null,
+p_gender char default null, 
+p_result out varchar2)
 is 
 begin 
   update cb_customers set
@@ -27,5 +29,32 @@ begin
   birth_date = nvl (p_birth_date, birth_date),
   gender = nvl(p_gender,gender)
   where id = p_id;
+  if SQL%rowcount=0 then
+  p_result := 'No row updated';
+  else
+  p_result := '1 row updated';
+  end if;
   commit;
   end;
+  
+set serveroutput on;
+
+declare
+a varchar2(90);
+begin 
+cb_customers_update(1,p_first_name=>'Ali',p_result=>a);
+dbms_output.put_line(a);
+end;
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
